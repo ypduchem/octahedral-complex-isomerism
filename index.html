@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Octahedral Isomerism 3D Explorer</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background: #090d16;
+      color: #f1f5f9;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
+    header {
+      height: 56px;
+      background: #111827;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px;
+      border-bottom: 1px solid #1f2937;
+      z-index: 10;
+    }
+    header h1 {
+      font-size: 1.15rem;
+      font-weight: 600;
+      color: #38bdf8;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .badge {
+      font-size: 0.72rem;
+      background: rgba(56, 189, 248, 0.15);
+      color: #38bdf8;
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      padding: 2px 6px;
+      border-radius: 4px;
+      text-transform: uppercase;
+    }
+    .controls {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+    select, button {
+      background: #1f2937;
+      color: #f3f4f6;
+      border: 1px solid #374151;
+      padding: 6px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      transition: all 0.2s ease;
+    }
+    select:focus, button:hover {
+      background: #374151;
+      border-color: #60a5fa;
+      outline: none;
+    }
+    .btn-active {
+      background: #0284c7 !important;
+      border-color: #38bdf8 !important;
+      color: #ffffff;
+    }
+    #container {
+      flex: 1;
+      display: flex;
+      position: relative;
+    }
+    .viewport {
+      flex: 1;
+      position: relative;
+      border-right: 1px solid #1f2937;
+    }
+    .viewport:last-child {
+      border-right: none;
+    }
+    .vp-label {
+      position: absolute;
+      top: 14px;
+      left: 16px;
+      background: rgba(17, 24, 39, 0.85);
+      backdrop-filter: blur(6px);
+      padding: 5px 12px;
+      border-radius: 6px;
+      font-size: 0.82rem;
+      pointer-events: none;
+      border: 1px solid #374151;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+    .dot-orig { background: #38bdf8; }
+    .dot-mirror { background: #f43f5e; }
+    #info-panel {
+      position: absolute;
+      bottom: 20px;
+      left: 20px;
+      right: 20px;
+      background: rgba(17, 24, 39, 0.9);
+      backdrop-filter: blur(10px);
+      padding: 14px 20px;
+      border-radius: 10px;
+      border: 1px solid #374151;
+      font-size: 0.9rem;
+      line-height: 1.6;
+      pointer-events: none;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+    }
+    #info-panel strong {
+      color: #38bdf8;
+    }
+  </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+</head>
+<body>
+
+  <header>
+    <h1>
+      八面體錯合物立體異構物 3D 比對平台
+      <span class="badge">Inorganic Chemistry</span>
+    </h1>
+    <div class="controls">
+      <label>模型案例：
+        <select id="preset-select">
+          <option value="cis-m-aa2-b2" selected>cis-[M(AA)₂b₂] (掌性 / 一對 Enantiomers)</option>
+          <option value="trans-m-aa2-b2">trans-[M(AA)₂b₂] (非掌性 / 具反轉中心 i)</option>
+          <option value="m-aa3">[M(AA)₃] (Δ / Λ 螺旋對映異構物)</option>
+          <option value="cis-ma2b4">cis-[Ma₂b₄] (非掌性 / 具鏡面 σ)</option>
+          <option value="trans-ma2b4">trans-[Ma₂b₄] (非掌性 / 具鏡面與中心)</option>
+          <option value="fac-ma3b3">fac-[Ma₃b₃] (非掌性 / 面式異構物)</option>
+          <option value="mer-ma3b3">mer-[Ma₃b₃] (非掌性 / 經式異構物)</option>
+        </select>
+      </label>
+      <button id="btn-sync" class="btn-active">同步旋轉: 開啟</button>
+      <button id="btn-reset">重置視角</button>
+    </div>
+  </header>
+
+  <div id="container">
+    <div class="viewport" id="vp-original">
+      <div class="vp-label"><span class="dot dot-orig"></span>原始結構 (Original)</div>
+    </div>
+    <div class="viewport" id="vp-mirror">
+      <div class="vp-label"><span class="dot dot-mirror"></span>鏡像結構 (Mirror: yz-plane)</div>
+    </div>
+
+    <div id="info-panel">
+      <strong>對稱性與光學活性解析：</strong><span id="analysis-text">載入中...</span>
+    </div>
+  </div>
+
+  <script>
+    const POS = {
+      px: [2.2, 0, 0],  nx: [-2.2, 0, 0],
+      py: [0, 2.2, 0],  ny: [0, -2.2, 0],
+      pz: [0, 0, 2.2],  nz: [0, 0, -2.2]
+    };
+
+    const PRESETS = {
+      "cis-m-aa2-b2": {
+        desc: "cis-[M(AA)₂b₂]（如 cis-[Co(en)₂Cl₂]⁺）：兩個雙齒鉗合環（綠色）處於順式位置。此分子完全缺乏對稱面（σ）與反轉中心（i），旋轉鏡像無法與原物完全疊合，具有光學活性，是一對對映異構物（Enantiomers）。",
+        ligands: [
+          { pos: POS.pz, color: 0x10b981 },
+          { pos: POS.px, color: 0x10b981 },
+          { pos: POS.ny, color: 0x059669 },
+          { pos: POS.nx, color: 0x059669 },
+          { pos: POS.py, color: 0xf59e0b },
+          { pos: POS.nz, color: 0xf59e0b }
+        ],
+        chelates: [[0, 1], [2, 3]]
+      },
+      "trans-m-aa2-b2": {
+        desc: "trans-[M(AA)₂b₂]：兩個單齒配位基（黃色）互為反式 (180°)，雙齒鉗合基分佈在赤道面。具有反轉中心（i）與多組對稱面，鏡像經旋轉後可完全重合，屬於非掌性（Achiral）。",
+        ligands: [
+          { pos: POS.px, color: 0x10b981 },
+          { pos: POS.py, color: 0x10b981 },
+          { pos: POS.nx, color: 0x059669 },
+          { pos: POS.ny, color: 0x059669 },
+          { pos: POS.pz, color: 0xf59e0b },
+          { pos: POS.nz, color: 0xf59e0b }
+        ],
+        chelates: [[0, 1], [2, 3]]
+      },
+      "m-aa3": {
+        desc: "[M(AA)₃]（如 [Co(en)₃]³⁺）：三個雙齒鉗合基形成類似螺旋槳的構型。屬於 D₃ 點群，雖然具有旋轉軸（C₃ 與 C₂），但缺乏任何反演對稱元素（無 σ、無 i），具有左旋/右旋（Δ 與 Λ）螺旋掌性對映體。",
+        ligands: [
+          { pos: POS.px, color: 0x10b981 },
+          { pos: POS.py, color: 0x10b981 },
+          { pos: POS.nx, color: 0x059669 },
+          { pos: POS.pz, color: 0x059669 },
+          { pos: POS.ny, color: 0x047857 },
+          { pos: POS.nz, color: 0x047857 }
+        ],
+        chelates: [[0, 1], [2, 3], [4, 5]]
+      },
+      "cis-ma2b4": {
+        desc: "cis-[Ma₂b₄]：兩個 a 配位基（紅色）夾角為 90°。此結構具有對稱面（包含金屬與兩個 a 的平面以及平分兩者的垂直平面），其鏡像可旋轉完全重合，為非掌性。",
+        ligands: [
+          { pos: POS.pz, color: 0xef4444 },
+          { pos: POS.px, color: 0xef4444 },
+          { pos: POS.nz, color: 0x3b82f6 },
+          { pos: POS.nx, color: 0x3b82f6 },
+          { pos: POS.py, color: 0x3b82f6 },
+          { pos: POS.ny, color: 0x3b82f6 }
+        ],
+        chelates: []
+      },
+      "trans-ma2b4": {
+        desc: "trans-[Ma₂b₄]：兩個 a 配位基互為反式 (180°)。具有高對稱性（D₄h 點群，包含反轉中心與水平/垂直鏡面），為非掌性分子。",
+        ligands: [
+          { pos: POS.pz, color: 0xef4444 },
+          { pos: POS.nz, color: 0xef4444 },
+          { pos: POS.px, color: 0x3b82f6 },
+          { pos: POS.nx, color: 0x3b82f6 },
+          { pos: POS.py, color: 0x3b82f6 },
+          { pos: POS.ny, color: 0x3b82f6 }
+        ],
+        chelates: []
+      },
+      "fac-ma3b3": {
+        desc: "fac-[Ma₃b₃]：三個 a 配位基佔據八面體同一個面的三個頂點（C₃v 點群）。具有三重旋轉軸與三組對稱面，鏡像可完全重合，為非掌性。",
+        ligands: [
+          { pos: POS.px, color: 0xef4444 },
+          { pos: POS.py, color: 0xef4444 },
+          { pos: POS.pz, color: 0xef4444 },
+          { pos: POS.nx, color: 0x3b82f6 },
+          { pos: POS.ny, color: 0x3b82f6 },
+          { pos: POS.nz, color: 0x3b82f6 }
+        ],
+        chelates: []
+      },
+      "mer-ma3b3": {
+        desc: "mer-[Ma₃b₃]：三個 a 配位基分佈於同一條經線平面（子午面）上（C₂v 點群）。分子包含兩組垂直對稱面，鏡像可重合，為非掌性。",
+        ligands: [
+          { pos: POS.px, color: 0xef4444 },
+          { pos: POS.nx, color: 0xef4444 },
+          { pos: POS.py, color: 0xef4444 },
+          { pos: POS.ny, color: 0x3b82f6 },
+          { pos: POS.pz, color: 0x3b82f6 },
+          { pos: POS.nz, color: 0x3b82f6 }
+        ],
+        chelates: []
+      }
+    };
+
+    let syncRotation = true;
+    const views = {};
+
+    function initViewport(id, isMirror = false) {
+      const container = document.getElementById(id);
+      const scene = new THREE.Scene();
+      scene.background = new THREE.Color(0x090d16);
+
+      const camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 100);
+      camera.position.set(5.5, 4.5, 7.5);
+
+      const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+      renderer.setSize(container.clientWidth, container.clientHeight);
+      renderer.setPixelRatio(window.devicePixelRatio);
+      container.appendChild(renderer.domElement);
+
+      const controls = new THREE.OrbitControls(camera, renderer.domElement);
+      controls.enableDamping = true;
+      controls.dampingFactor = 0.05;
+
+      const ambientLight = new THREE.AmbientLight(0xffffff, 0.75);
+      scene.add(ambientLight);
+      const dirLight = new THREE.DirectionalLight(0xffffff, 0.65);
+      dirLight.position.set(10, 15, 10);
+      scene.add(dirLight);
+
+      const molGroup = new THREE.Group();
+      scene.add(molGroup);
+
+      return { container, scene, camera, renderer, controls, molGroup, isMirror };
+    }
+
+    views.orig = initViewport("vp-original", false);
+    views.mirror = initViewport("vp-mirror", true);
+
+    function buildMolecule(group, data, isMirror = false) {
+      while(group.children.length > 0) { 
+        group.remove(group.children[0]); 
+      }
+
+      // 中心金屬
+      const metalGeo = new THREE.SphereGeometry(0.7, 32, 32);
+      const metalMat = new THREE.MeshStandardMaterial({ color: 0x94a3b8, roughness: 0.3, metalness: 0.5 });
+      const metalMesh = new THREE.Mesh(metalGeo, metalMat);
+      group.add(metalMesh);
+
+      const ligandMeshes = [];
+      data.ligands.forEach((lig) => {
+        const x = isMirror ? -lig.pos[0] : lig.pos[0];
+        const y = lig.pos[1];
+        const z = lig.pos[2];
+        const posVec = new THREE.Vector3(x, y, z);
+
+        // 配位基球
+        const ligGeo = new THREE.SphereGeometry(0.42, 24, 24);
+        const ligMat = new THREE.MeshStandardMaterial({ color: lig.color, roughness: 0.35 });
+        const ligMesh = new THREE.Mesh(ligGeo, ligMat);
+        ligMesh.position.copy(posVec);
+        group.add(ligMesh);
+        ligandMeshes.push(posVec);
+
+        // 配位鍵
+        const bondGeo = new THREE.CylinderGeometry(0.08, 0.08, posVec.length(), 16);
+        const bondMat = new THREE.MeshStandardMaterial({ color: 0x64748b, roughness: 0.5 });
+        const bondMesh = new THREE.Mesh(bondGeo, bondMat);
+        
+        const midPoint = posVec.clone().multiplyScalar(0.5);
+        bondMesh.position.copy(midPoint);
+        bondMesh.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), posVec.clone().normalize());
+        group.add(bondMesh);
+      });
+
+      // 鉗合配位基環
+      data.chelates.forEach(pair => {
+        const p1 = ligandMeshes[pair[0]];
+        const p2 = ligandMeshes[pair[1]];
+        const curve = new THREE.QuadraticBezierCurve3(
+          p1,
+          p1.clone().add(p2).multiplyScalar(0.68),
+          p2
+        );
+        const tubeGeo = new THREE.TubeGeometry(curve, 24, 0.09, 8, false);
+        const tubeMat = new THREE.MeshStandardMaterial({ color: 0x10b981, roughness: 0.35 });
+        const tubeMesh = new THREE.Mesh(tubeGeo, tubeMat);
+        group.add(tubeMesh);
+      });
+    }
+
+    function loadPreset(key) {
+      const data = PRESETS[key];
+      buildMolecule(views.orig.molGroup, data, false);
+      buildMolecule(views.mirror.molGroup, data, true);
+      document.getElementById("analysis-text").innerText = data.desc;
+    }
+
+    document.getElementById("preset-select").addEventListener("change", (e) => {
+      loadPreset(e.target.value);
+    });
+
+    const btnSync = document.getElementById("btn-sync");
+    btnSync.addEventListener("click", () => {
+      syncRotation = !syncRotation;
+      btnSync.innerText = `同步旋轉: ${syncRotation ? '開啟' : '關閉'}`;
+      btnSync.classList.toggle("btn-active", syncRotation);
+    });
+
+    document.getElementById("btn-reset").addEventListener("click", () => {
+      [views.orig, views.mirror].forEach(v => {
+        v.camera.position.set(5.5, 4.5, 7.5);
+        v.controls.reset();
+      });
+    });
+
+    views.orig.controls.addEventListener("change", () => {
+      if (syncRotation) {
+        views.mirror.camera.position.copy(views.orig.camera.position);
+        views.mirror.camera.rotation.copy(views.orig.camera.rotation);
+      }
+    });
+
+    views.mirror.controls.addEventListener("change", () => {
+      if (syncRotation) {
+        views.orig.camera.position.copy(views.mirror.camera.position);
+        views.orig.camera.rotation.copy(views.mirror.camera.rotation);
+      }
+    });
+
+    window.addEventListener("resize", () => {
+      [views.orig, views.mirror].forEach(v => {
+        v.camera.aspect = v.container.clientWidth / v.container.clientHeight;
+        v.camera.updateProjectionMatrix();
+        v.renderer.setSize(v.container.clientWidth, v.container.clientHeight);
+      });
+    });
+
+    function animate() {
+      requestAnimationFrame(animate);
+      views.orig.controls.update();
+      views.mirror.controls.update();
+      views.orig.renderer.render(views.orig.scene, views.orig.camera);
+      views.mirror.renderer.render(views.mirror.scene, views.mirror.camera);
+    }
+
+    loadPreset("cis-m-aa2-b2");
+    animate();
+  </script>
+</body>
+</html>
