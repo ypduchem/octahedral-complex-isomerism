@@ -4,24 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Stereoisomerism in Octahedral Complexes | 3D Interactive Module</title>
-  
-  <!-- MathJax for chemical and mathematical typography -->
-  <script>
-    window.MathJax = {
-      tex: {
-        inlineMath: [['$', '$'], ['\\(', '\\)']],
-        displayMath: [['$$', '$$'], ['[', ']']]
-      },
-      svg: { fontCache: 'global' }
-    };
-  </script>
-  <script type="text/javascript" id="MathJax-script" async
-    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js">
-  </script>
 
-  <!-- Three.js & OrbitControls -->
+  <!-- Unified CDN for Three.js & OrbitControls -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/examples/js/controls/OrbitControls.js"></script>
 
   <style>
     :root {
@@ -39,6 +25,7 @@
       --emerald: #10b981;
       --rose: #f43f5e;
       --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      --font-serif: "Times New Roman", Times, Georgia, serif;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -51,6 +38,26 @@
       font-size: 15px;
       -webkit-font-smoothing: antialiased;
     }
+
+    /* Chemical & Mathematical Typography */
+    .chem {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-weight: 500;
+      letter-spacing: 0.01em;
+    }
+    .sym {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: 1.05em;
+    }
+    sub, sup {
+      font-size: 0.72em;
+      line-height: 0;
+      position: relative;
+      vertical-align: baseline;
+    }
+    sup { top: -0.5em; }
+    sub { bottom: -0.25em; }
 
     /* Academic Sticky Navigation */
     nav {
@@ -98,9 +105,7 @@
       font-size: 0.88rem;
       transition: color 0.15s ease;
     }
-    .nav-links a:hover {
-      color: var(--accent);
-    }
+    .nav-links a:hover { color: var(--accent); }
 
     /* Layout Containers */
     main {
@@ -143,15 +148,11 @@
     .metadata-strip {
       display: flex;
       flex-wrap: wrap;
-      gap: 16px;
-      font-size: 0.82rem;
+      gap: 24px;
+      font-size: 0.84rem;
       color: var(--text-dim);
     }
-    .metadata-strip span {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
+    .metadata-strip span strong { color: var(--text-muted); }
 
     /* Content Typography & Cards */
     h2 {
@@ -185,15 +186,17 @@
       font-weight: 600;
       color: var(--text-main);
       margin-bottom: 10px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
     }
-    .card p {
+    .card p, .card li {
       font-size: 0.92rem;
       color: var(--text-muted);
-      line-height: 1.6;
+      line-height: 1.65;
     }
+    .card ul {
+      margin-left: 18px;
+      margin-top: 10px;
+    }
+    .card li { margin-bottom: 6px; }
 
     /* Interactive Exploration / Self-Assessment Boxes */
     .inquiry-box {
@@ -232,9 +235,7 @@
       border-top: 1px dashed var(--border-subtle);
       display: none;
     }
-    .reveal-content.show {
-      display: block;
-    }
+    .reveal-content.show { display: block; }
 
     /* 3D Visualizer Workspace */
     .lab-frame {
@@ -262,3 +263,278 @@
       font-size: 0.85rem;
     }
     select, .ctrl-btn {
+      background: var(--bg-primary);
+      color: var(--text-main);
+      border: 1px solid var(--border-strong);
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    select:focus, .ctrl-btn:hover {
+      border-color: var(--accent);
+      outline: none;
+    }
+    .ctrl-btn.btn-active {
+      background: var(--accent-focus);
+      border-color: var(--accent);
+      color: #ffffff;
+    }
+
+    #viewport-container {
+      height: 480px;
+      width: 100%;
+      display: flex;
+      position: relative;
+    }
+    .viewport {
+      flex: 1;
+      height: 100%;
+      position: relative;
+      border-right: 1px solid var(--border-subtle);
+      overflow: hidden;
+    }
+    .viewport:last-child { border-right: none; }
+    .viewport-overlay-label {
+      position: absolute;
+      top: 12px;
+      left: 14px;
+      z-index: 5;
+      background: rgba(11, 15, 25, 0.85);
+      border: 1px solid var(--border-subtle);
+      padding: 4px 10px;
+      border-radius: 4px;
+      font-size: 0.78rem;
+      font-family: var(--font-mono);
+      color: var(--text-muted);
+      pointer-events: none;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .indicator-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+    }
+    .dot-orig { background: var(--accent); }
+    .dot-mirror { background: var(--rose); }
+
+    .lab-status {
+      padding: 14px 20px;
+      background: #0d131f;
+      border-top: 1px solid var(--border-subtle);
+      font-size: 0.88rem;
+      line-height: 1.5;
+    }
+    .lab-status strong { color: var(--accent); }
+
+    /* Verification Tasks */
+    .task-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px;
+      margin-top: 20px;
+    }
+    .task-item {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-left: 3px solid var(--accent);
+      border-radius: 6px;
+      padding: 16px;
+      font-size: 0.88rem;
+      color: var(--text-muted);
+    }
+    .task-item strong {
+      display: block;
+      color: var(--text-main);
+      margin-bottom: 4px;
+    }
+
+    /* Quiz Assessment */
+    .quiz-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: 8px;
+      padding: 22px;
+      margin-bottom: 18px;
+    }
+    .quiz-question {
+      font-size: 0.98rem;
+      font-weight: 600;
+      margin-bottom: 14px;
+      color: var(--text-main);
+    }
+    .quiz-options {
+      display: grid;
+      gap: 8px;
+    }
+    .quiz-btn {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-main);
+      padding: 10px 14px;
+      border-radius: 6px;
+      text-align: left;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: all 0.15s ease;
+    }
+    .quiz-btn:hover:not(:disabled) {
+      border-color: var(--accent);
+      background: #253347;
+    }
+    .quiz-btn.correct {
+      background: rgba(16, 185, 129, 0.18);
+      border-color: var(--emerald);
+      color: #a7f3d0;
+    }
+    .quiz-btn.incorrect {
+      background: rgba(244, 63, 94, 0.18);
+      border-color: var(--rose);
+      color: #fecdd3;
+    }
+    .quiz-explanation {
+      margin-top: 12px;
+      padding: 12px 14px;
+      background: rgba(11, 15, 25, 0.65);
+      border-left: 3px solid var(--accent);
+      border-radius: 4px;
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      display: none;
+    }
+
+    .evaluation-summary {
+      background: #141e30;
+      border: 1px solid var(--border-strong);
+      border-radius: 8px;
+      padding: 20px;
+      text-align: center;
+      margin-top: 24px;
+    }
+    .evaluation-summary h3 {
+      font-size: 1.25rem;
+      margin-bottom: 4px;
+    }
+
+    @media (max-width: 768px) {
+      #viewport-container {
+        flex-direction: column;
+        height: 640px;
+      }
+      .viewport {
+        border-right: none;
+        border-bottom: 1px solid var(--border-subtle);
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Academic Navigation -->
+  <nav>
+    <div class="nav-inner">
+      <div class="nav-title">
+        <span class="course-code">CHEM 301</span>
+        <span>Coordination Chemistry &amp; Molecular Symmetry</span>
+      </div>
+      <div class="nav-links">
+        <a href="#taxonomy">1. Isomer Taxonomy</a>
+        <a href="#chirality">2. Symmetry Criteria</a>
+        <a href="#sandbox">3. 3D Sandbox</a>
+        <a href="#assessment">4. Evaluation</a>
+      </div>
+    </div>
+  </nav>
+
+  <main>
+    <!-- Hero / Scope Section -->
+    <header class="hero">
+      <div class="section-eyebrow">Interactive Pedagogy Module</div>
+      <h1>Stereoisomerism and Chirality in Octahedral Complexes</h1>
+      <p class="lead">
+        In coordination chemistry, identical molecular formulas can give rise to distinct constitutional isomers or spatial stereoisomers. This module examines the structural distinction between constitutional isomers and stereoisomers, and demonstrates how point-group symmetry governs chirality in six-coordinate octahedral complexes.
+      </p>
+      <div class="metadata-strip">
+        <span><strong>Coordination Geometry:</strong> Octahedral (<span class="sym">O</span><sub>h</sub> framework)</span>
+        <span><strong>Symmetry Operations:</strong> Proper Rotation (<span class="sym">C<sub>n</sub></span>), Improper Rotation (<span class="sym">S<sub>n</sub></span>, <span class="sym">&sigma;</span>, <span class="sym">i</span>)</span>
+        <span><strong>Level:</strong> Advanced Undergraduate Inorganic Chemistry</span>
+      </div>
+    </header>
+
+    <!-- Unit 1: Structural vs Chiral/Stereoisomers -->
+    <section id="taxonomy">
+      <div class="section-eyebrow">Unit 1</div>
+      <h2>Taxonomy of Isomerism: Structural Isomers vs. Chiral Isomers</h2>
+      <p class="section-desc">
+        Isomers are compounds with identical elemental formulas but distinct atomic arrangements. In coordination chemistry, they are divided into two primary classes: <strong>Structural (Constitutional) Isomers</strong>, which differ in bonding connectivity, and <strong>Stereoisomers</strong> (including geometric diastereomers and chiral enantiomers), which share identical bond connectivity but differ in spatial orientation.
+      </p>
+
+      <div class="grid-2">
+        <div class="card">
+          <h3>1. Structural (Constitutional) Isomers</h3>
+          <p>
+            Possess different atom-to-atom connectivity or different ligands within the primary coordination sphere:
+          </p>
+          <ul>
+            <li><strong>Ionization Isomers:</strong> Exchange of a ligand inside the inner coordination sphere with a counter-ion in the outer sphere, e.g., <span class="chem">[Co(NH<sub>3</sub>)<sub>5</sub>Br]SO<sub>4</sub></span> vs. <span class="chem">[Co(NH<sub>3</sub>)<sub>5</sub>(SO<sub>4</sub>)]Br</span>.</li>
+            <li><strong>Linkage Isomers:</strong> Ambidentate ligands coordinating through different donor atoms, e.g., nitro (<span class="chem">M&ndash;NO<sub>2</sub></span>) vs. nitrito (<span class="chem">M&ndash;ONO</span>).</li>
+            <li><strong>Coordination Isomers:</strong> Distribution exchange of ligands between cationic and anionic complex ions, e.g., <span class="chem">[Co(NH<sub>3</sub>)<sub>6</sub>][Cr(CN)<sub>6</sub>]</span> vs. <span class="chem">[Cr(NH<sub>3</sub>)<sub>6</sub>][Co(CN)<sub>6</sub>]</span>.</li>
+            <li><strong>Hydrate (Solvate) Isomers:</strong> Differ in whether water molecules act as inner-sphere ligands or lattice water.</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h3>2. Stereoisomers &amp; Chiral Isomers (Enantiomers)</h3>
+          <p>
+            Maintain identical metal-ligand bonding sequences, differing exclusively in 3D spatial arrangement:
+          </p>
+          <ul>
+            <li><strong>Geometric Isomers (Diastereomers):</strong> Non-mirror-image stereoisomers where relative trans/cis (<span class="chem">90&deg;</span> vs. <span class="chem">180&deg;</span>) bond angles differ, such as <em>cis</em>/<em>trans</em> or <em>fac</em>/<em>mer</em>. They exhibit distinct physical and spectroscopic properties.</li>
+            <li><strong>Chiral (Optical) Isomers (Enantiomers):</strong> Stereoisomers that are <strong>non-superimposable mirror images</strong> of one another. Unlike structural or geometric isomers, a pair of enantiomers shares identical scalar physical properties (melting point, dipole moment, NMR chemical shifts) in an achiral environment, differing only in their interaction with plane-polarized light or other chiral species.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="inquiry-box">
+        <h3>Concept Check: Structural Connectivity vs. Spatial Handedness</h3>
+        <p style="color: var(--text-muted); font-size: 0.92rem;">
+          Consider two complexes: Pair A consists of <span class="chem">[Co(en)<sub>2</sub>(NO<sub>2</sub>)<sub>2</sub>]Cl</span> and <span class="chem">[Co(en)<sub>2</sub>(NO<sub>2</sub>)Cl](NO<sub>2</sub>)</span>. Pair B consists of <span class="sym">&Delta;</span>-<span class="chem"><i>cis</i>-[Co(en)<sub>2</sub>Cl<sub>2</sub>]<sup>+</sup></span> and <span class="sym">&Lambda;</span>-<span class="chem"><i>cis</i>-[Co(en)<sub>2</sub>Cl<sub>2</sub>]<sup>+</sup></span>. How do their physical separation methods differ?
+        </p>
+        <button class="toggle-btn" onclick="toggleReveal('reveal-u1', this)">Show Analytical Explanation</button>
+        <div id="reveal-u1" class="reveal-content">
+          <p style="color: var(--text-muted); font-size: 0.92rem;">
+            <strong>Pair A (Ionization / Structural Isomers):</strong> Have entirely different chemical bonds in the inner sphere. Adding <span class="chem">AgNO<sub>3</sub>(aq)</span> immediately precipitates <span class="chem">AgCl(s)</span> from the first complex, whereas the second has chloride bound covalently to Cobalt(III).<br><br>
+            <strong>Pair B (Chiral Enantiomers):</strong> Possess identical <span class="chem">Co&ndash;N</span> and <span class="chem">Co&ndash;Cl</span> connectivity and identical bond angles. They cannot be separated by standard achiral chromatography or precipitation; resolution requires a chiral resolving agent (e.g., forming diastereomeric salts with optically pure tartrate).
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Unit 2: Chirality and Symmetry Operations -->
+    <section id="chirality">
+      <div class="section-eyebrow">Unit 2</div>
+      <h2>Symmetry Criteria for Chiral Complexes</h2>
+      <p class="section-desc">
+        Unlike tetrahedral carbon compounds that typically require an asymmetric atom bonded to four different groups, octahedral complexes frequently exhibit chirality through overall molecular dissymmetry.
+      </p>
+
+      <div class="grid-2">
+        <div class="card">
+          <h3>Improper Rotation Axis (<span class="sym">S<sub>n</sub></span>) Criterion</h3>
+          <p>
+            A molecule is <strong>chiral</strong> if and only if it lacks any improper axis of rotation (<span class="sym">S<sub>n</sub></span>):
+          </p>
+          <ul>
+            <li><strong>Mirror Plane (<span class="sym">&sigma; &equiv; S<sub>1</sub></span>):</strong> If a plane divides the complex into two halves that are reflections of each other, the complex is achiral.</li>
+            <li><strong>Inversion Center (<span class="sym">i &equiv; S<sub>2</sub></span>):</strong> If every atom at <span class="chem">(x, y, z)</span> has an identical atom at <span class="chem">(&minus;x, &minus;y, &minus;z)</span>, the complex is achiral.</li>
+            <li><strong>Proper Rotation (<span class="sym">C<sub>n</sub></span>):</strong> The presence of proper rotation axes does <em>not</em> prevent chirality. Many classic chiral chelates belong to chiral point groups <span class="sym">C<sub>1</sub></span>, <span class="sym">C<sub>2</sub></span>, or <span class="sym">D<sub>3</sub></span>.</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h3>Propeller Twist: <span class="sym">&Delta;</span> and <span class="sym">&Lambda;</span> Configurations</h3>
+          <p>
+            When two or three bidentate chelating ligands (such as ethylenediamine,
