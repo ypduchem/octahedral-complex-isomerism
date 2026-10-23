@@ -537,4 +537,462 @@
         <div class="card">
           <h3>Propeller Twist: <span class="sym">&Delta;</span> and <span class="sym">&Lambda;</span> Configurations</h3>
           <p>
-            When two or three bidentate chelating ligands (such as ethylenediamine,
+            When two or three bidentate chelating ligands (such as ethylenediamine, <span class="chem">en</span>, or oxalate, <span class="chem">ox<sup>2&minus;</sup></span>) coordinate in mutually <em>cis</em> positions, they create a helical twist around the metal center.
+          </p>
+          <ul>
+            <li><strong><span class="sym">&Delta;</span> (Delta, Right-Handed Screw):</strong> Viewed down the principal <span class="sym">C<sub>3</sub></span> axis, the chelate rings trace a clockwise helix moving away from the viewer.</li>
+            <li><strong><span class="sym">&Lambda;</span> (Lambda, Left-Handed Screw):</strong> Viewed down the same axis, the chelate rings trace a counter-clockwise helix.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Unit 3: 3D Inspection Sandbox -->
+    <section id="sandbox">
+      <div class="section-eyebrow">Interactive Laboratory</div>
+      <h2>3D Mirror Superimposability Sandbox</h2>
+      <p class="section-desc">
+        Compare the original octahedral complex (left) with its mirror image reflected across the <span class="sym">yz</span>-plane (right). Drag inside either viewport to rotate the complex in 3D and test whether the mirror reflection can be superimposed onto the original molecule.
+      </p>
+
+      <div class="lab-frame">
+        <div class="lab-toolbar">
+          <div class="toolbar-group">
+            <label for="preset-select" style="color: var(--text-muted);">Select Coordination Complex:</label>
+            <select id="preset-select">
+              <option value="cis-m-aa2-b2" selected>cis-[M(AA)₂b₂] (Chiral / C₂ Enantiomeric Pair)</option>
+              <option value="trans-m-aa2-b2">trans-[M(AA)₂b₂] (Achiral / Inversion Center i)</option>
+              <option value="m-aa3">[M(AA)₃] (Chiral / D₃ Propeller Δ and Λ)</option>
+              <option value="cis-ma2b4">cis-[Ma₂b₄] (Achiral / C₂v with σ Planes)</option>
+              <option value="trans-ma2b4">trans-[Ma₂b₄] (Achiral / D₄h Symmetry)</option>
+              <option value="fac-ma3b3">fac-[Ma₃b₃] (Achiral / C₃v Facial Isomer)</option>
+              <option value="mer-ma3b3">mer-[Ma₃b₃] (Achiral / C₂v Meridional Isomer)</option>
+            </select>
+          </div>
+          <div class="toolbar-group">
+            <button id="btn-sync" class="ctrl-btn btn-active">Synchronized Rotation: ON</button>
+            <button id="btn-reset" class="ctrl-btn">Reset Camera</button>
+          </div>
+        </div>
+
+        <div id="viewport-container">
+          <div class="viewport" id="vp-original">
+            <div class="viewport-overlay-label">
+              <span class="indicator-dot dot-orig"></span>
+              Original Conformation
+            </div>
+          </div>
+          <div class="viewport" id="vp-mirror">
+            <div class="viewport-overlay-label">
+              <span class="indicator-dot dot-mirror"></span>
+              Mirror Reflection (yz-plane)
+            </div>
+          </div>
+        </div>
+
+        <div class="lab-status">
+          <strong>Stereochemical Analysis:</strong>
+          <span id="analysis-text">Initializing 3D WebGL viewports...</span>
+        </div>
+      </div>
+
+      <div class="task-grid">
+        <div class="task-item">
+          <strong>Task 1: Test Enantiomer Non-Superimposability</strong>
+          Select <span class="chem"><i>cis</i>-[M(AA)<sub>2</sub>b<sub>2</sub>]</span> and turn <strong>OFF</strong> Synchronized Rotation. Rotate the right viewport so the two yellow monodentate ligands match the left viewport. Observe that the green bidentate chelate rings sweep in opposite directions.
+        </div>
+        <div class="task-item">
+          <strong>Task 2: Verify Achiral Superposition</strong>
+          Switch to <span class="chem"><i>trans</i>-[M(AA)<sub>2</sub>b<sub>2</sub>]</span> or <span class="chem"><i>cis</i>-[Ma<sub>2</sub>b<sub>4</sub>]</span>. Rotate the right viewport by 180&deg; to confirm that the mirror image aligns identically with the original molecule.
+        </div>
+        <div class="task-item">
+          <strong>Task 3: Inspect D<sub>3</sub> Helical Pitch</strong>
+          Select <span class="chem">[M(AA)<sub>3</sub>]</span>. Orient the complex so you are looking directly down the threefold axis (where all three green chelate rings radiate outward symmetrically) and compare the clockwise vs. counter-clockwise twist.
+        </div>
+      </div>
+    </section>
+
+    <!-- Unit 4: Academic Assessment -->
+    <section id="assessment">
+      <div class="section-eyebrow">Formative Assessment</div>
+      <h2>Comprehension &amp; Symmetry Evaluation</h2>
+      <p class="section-desc">
+        Select the best answer for each question to verify your understanding of structural isomerism, diastereomerism, and chirality.
+      </p>
+
+      <!-- Question 1 -->
+      <div class="quiz-card" data-correct="1">
+        <div class="quiz-question">
+          1. Which of the following octahedral complexes is chiral (optically active) and exists as a pair of non-superimposable enantiomers?
+        </div>
+        <div class="quiz-options">
+          <button class="quiz-btn" onclick="evaluateAnswer(this, 0)">A. <span class="chem"><i>trans</i>-[Co(en)<sub>2</sub>Cl<sub>2</sub>]<sup>+</sup></span></button>
+          <button class="quiz-btn" onclick="evaluateAnswer(this, 1)">B. <span class="chem"><i>cis</i>-[Co(en)<sub>2</sub>Cl<sub>2</sub>]<sup>+</sup></span></button>
+          <button class="quiz-btn" onclick="evaluateAnswer(this, 2)">C. <span class="chem"><i>mer</i>-[Co(NH<sub>3</sub>)<sub>3</sub>Cl<sub>3</sub>]</span></button>
+          <button class="quiz-btn" onclick="evaluateAnswer(this, 3)">D. <span class="chem"><i>cis</i>-[Pt(NH<sub>3</sub>)<sub>2</sub>Cl<sub>4</sub>]</span></button>
+        </div>
+        <div class="quiz-explanation">
+          <strong>Analysis:</strong> <span class="chem"><i>cis</i>-[Co(en)<sub>2</sub>Cl<sub>2</sub>]<sup>+</sup></span> belongs to the <span class="sym">C<sub>2</sub></span> point group and lacks any mirror plane (<span class="sym">&sigma;</span>) or inversion center (<span class="sym">i</span>), making it chiral. All other choices possess internal mirror planes of symmetry and are achiral.
+        </div>
+      </div>
+
+      <!-- Question 2 -->
+      <div class="quiz-card" data-correct="2">
+        <div class="quiz-question">
+          2. Including both geometric isomers (diastereomers) and optical isomers (enantiomers), how many total stereoisomers exist for the formula <span class="chem">[Co(en)<sub>2</sub>Cl<sub>2</sub>]<sup>+</sup></span>?
+        </div>
+        <div class="quiz-options">
+          <button class="quiz-btn" onclick="evaluateAnswer(this, 0)">A. 1</button>
+          <button class="quiz-btn" onclick="evaluateAnswer(this, 1)">B. 2 (only <i>cis</i> and <i>trans</i>)</button>
+          <button class="quiz-btn" onclick="evaluateAnswer(this, 2)">C. 3 (one achiral <i>trans</i> isomer + the <span class="sym">&Delta;</span> and <span class="sym">&Lambda;</span> enantiomers of the <i>cis</i> isomer)</button>
+          <button class="quiz-btn" onclick="evaluateAnswer(this, 3)">D. 4 (both <i>cis</i> and <i>trans</i> exist as enantiomeric pairs)</button>
+        </div>
+        <div class="quiz-explanation">
+          <strong>Analysis:</strong> The <span class="chem"><i>trans</i>-[Co(en)<sub>2</sub>Cl<sub>2</sub>]<sup>+</sup></span> isomer possesses an inversion center (<span class="sym">i</span>) and mirror planes, so its mirror image is identical (1 isomer). The <span class="chem"><i>cis</i>-[Co(en)<sub>2</sub>Cl<sub>2</sub>]<sup>+</sup></span> isomer is chiral and resolves into <span class="sym">&Delta;</span> and <span class="sym">&Lambda;</span> enantiomers (2 isomers). Total = 3 stereoisomers.
+        </div>
+      </div>
+
+      <!-- Question 3 -->
+      <div class="quiz-card" data-correct="0">
+        <div class="quiz-question">
+          3. How are the two complexes <span class="chem">[Co(NH<sub>3</sub>)<sub>5</sub>(NO<sub>2</sub>)]Cl<sub>2</sub></span> (containing an N-bound nitro ligand) and <span class="chem">[Co(NH<sub>3</sub>)<sub>5</sub>(ONO)]Cl<sub>2</sub></span> (containing an O-bound nitrito ligand) classified?
+        </div>
+        <div class="quiz-options">
+          <button class="quiz-btn" onclick="evaluateAnswer(this, 0)">A. Structural (linkage) isomers, because the atom-to-metal connectivity differs.</button>
+          <button class="quiz-btn" onclick="evaluateAnswer(this, 1)">B. Chiral enantiomers, because <span class="chem">NO<sub>2</sub><sup>&minus;</sup></span> and <span class="chem">ONO<sup>&minus;</sup></span> are mirror images.</button>
+          <button class="quiz-btn" onclick="evaluateAnswer(this, 2)">C. Geometric diastereomers (<i>fac</i> and <i>mer</i>).</button>
+          <button class="quiz-btn" onclick="evaluateAnswer(this, 3)">D. Coordination isomers involving counter-ion exchange.</button>
+        </div>
+        <div class="quiz-explanation">
+          <strong>Analysis:</strong> Because the ambidentate <span class="chem">NO<sub>2</sub><sup>&minus;</sup></span> ligand coordinates to the metal center through nitrogen in one isomer and oxygen in the other, their bonding connectivity is different. They are constitutional (linkage) isomers rather than stereoisomers.
+        </div>
+      </div>
+
+      <!-- Question 4 -->
+      <div class="quiz-card" data-correct="3">
+        <div class="quiz-question">
+          4. The tris-chelate complex <span class="chem">[Cr(ox)<sub>3</sub>]<sup>3&minus;</sup></span> (<span class="chem">ox<sup>2&minus;</sup> = C<sub>2</sub>O<sub>4</sub><sup>2&minus;</sup></span>) belongs to the <span class="sym">D<sub>3</sub></span> point group. Why is this complex optically active?
+        </div>
+        <div class="quiz-options">
+          <button class="quiz-btn" onclick="evaluateAnswer(this, 0)">A. It is achiral, because all three bidentate oxalate ligands are identical.</button>
+          <button class="quiz-btn" onclick="evaluateAnswer(this, 1)">B. It is achiral, because the presence of <span class="sym">C<sub>3</sub></span> and perpendicular <span class="sym">C<sub>2</sub></span> axes eliminates chirality.</button>
+          <button class="quiz-btn" onclick="evaluateAnswer(this, 2)">C. It is chiral, because the central <span class="chem">Cr<sup>3+</sup></span> ion acts as an <span class="sym">sp<sup>3</sup></span> asymmetric carbon center.</button>
+          <button class="quiz-btn" onclick="evaluateAnswer(this, 3)">D. It is chiral, because despite having <span class="sym">C<sub>3</sub></span> and <span class="sym">C<sub>2</sub></span> proper rotation axes, it lacks any improper rotation axis (<span class="sym">S<sub>n</sub></span>, <span class="sym">&sigma;</span>, or <span class="sym">i</span>).</button>
+        </div>
+        <div class="quiz-explanation">
+          <strong>Analysis:</strong> Proper rotation axes (<span class="sym">C<sub>n</sub></span>) never preclude chirality. Because the <span class="sym">D<sub>3</sub></span> point group contains no mirror planes (<span class="sym">&sigma;</span>), no inversion center (<span class="sym">i</span>), and no higher <span class="sym">S<sub>n</sub></span> axes, <span class="chem">[Cr(ox)<sub>3</sub>]<sup>3&minus;</sup></span> is chiral and exists as <span class="sym">&Delta;</span> and <span class="sym">&Lambda;</span> enantiomers.
+        </div>
+      </div>
+
+      <div class="evaluation-summary">
+        <h3 id="assessment-score">Score: 0 / 100</h3>
+        <p id="assessment-status" style="color: var(--text-muted); font-size: 0.9rem;">
+          Complete all four questions above to evaluate comprehension.
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    // --- 1. Toggle Concept Inquiries ---
+    function toggleReveal(id, btn) {
+      const el = document.getElementById(id);
+      const isVisible = el.classList.toggle('show');
+      btn.innerText = isVisible ? 'Hide Analytical Explanation' : 'Show Analytical Explanation';
+    }
+
+    // --- 2. Interactive Assessment Handler ---
+    let totalScore = 0;
+    let questionsAnswered = 0;
+
+    function evaluateAnswer(buttonElement, chosenIdx) {
+      const parentCard = buttonElement.closest('.quiz-card');
+      const correctIdx = parseInt(parentCard.getAttribute('data-correct'), 10);
+      const options = parentCard.querySelectorAll('.quiz-btn');
+      const explanation = parentCard.querySelector('.quiz-explanation');
+
+      options.forEach((opt, idx) => {
+        opt.disabled = true;
+        if (idx === correctIdx) opt.classList.add('correct');
+      });
+
+      if (chosenIdx === correctIdx) {
+        totalScore += 25;
+      } else {
+        buttonElement.classList.add('incorrect');
+      }
+
+      questionsAnswered++;
+      explanation.style.display = 'block';
+
+      const scoreEl = document.getElementById('assessment-score');
+      const statusEl = document.getElementById('assessment-status');
+      scoreEl.innerText = `Score: ${totalScore} / 100 (${questionsAnswered} of 4 answered)`;
+
+      if (questionsAnswered === 4) {
+        if (totalScore === 100) {
+          statusEl.innerText = 'Exemplary Mastery: Complete command of structural vs. stereoisomeric taxonomy and point-group chirality.';
+          statusEl.style.color = '#38bdf8';
+        } else if (totalScore >= 75) {
+          statusEl.innerText = 'Proficient Comprehension: Solid grasp of coordination stereochemistry and improper rotation rules.';
+          statusEl.style.color = '#10b981';
+        } else {
+          statusEl.innerText = 'Review Recommended: Re-examine the 3D sandbox to compare mirror planes and non-superimposable chelates.';
+          statusEl.style.color = '#f59e0b';
+        }
+      }
+    }
+
+    // --- 3. Three.js Dual Viewport Engine (Initialized safely after DOM layout) ---
+    window.addEventListener('DOMContentLoaded', () => {
+      const VERTICES = {
+        px: [2.2, 0, 0],  nx: [-2.2, 0, 0],
+        py: [0, 2.2, 0],  ny: [0, -2.2, 0],
+        pz: [0, 0, 2.2],  nz: [0, 0, -2.2]
+      };
+
+      const COMPLEX_PRESETS = {
+        "cis-m-aa2-b2": {
+          desc: "cis-[M(AA)₂b₂] (Point Group C₂): The two bidentate chelate rings (green) occupy adjacent sites, and the two monodentate ligands (yellow) are at 90°. Lacking both mirror planes (σ) and an inversion center (i), its mirror image cannot be superimposed by any 3D rotation.",
+          ligands: [
+            { pos: VERTICES.pz, color: 0x10b981 },
+            { pos: VERTICES.px, color: 0x10b981 },
+            { pos: VERTICES.ny, color: 0x059669 },
+            { pos: VERTICES.nx, color: 0x059669 },
+            { pos: VERTICES.py, color: 0xf59e0b },
+            { pos: VERTICES.nz, color: 0xf59e0b }
+          ],
+          chelates: [[0, 1], [2, 3]]
+        },
+        "trans-m-aa2-b2": {
+          desc: "trans-[M(AA)₂b₂] (Point Group D₂h): The two monodentate ligands (yellow) lie at 180° trans positions while the two chelate rings lie in the equatorial plane. Contains an inversion center (i) and three mirror planes (σ). Achiral.",
+          ligands: [
+            { pos: VERTICES.px, color: 0x10b981 },
+            { pos: VERTICES.py, color: 0x10b981 },
+            { pos: VERTICES.nx, color: 0x059669 },
+            { pos: VERTICES.ny, color: 0x059669 },
+            { pos: VERTICES.pz, color: 0xf59e0b },
+            { pos: VERTICES.nz, color: 0xf59e0b }
+          ],
+          chelates: [[0, 1], [2, 3]]
+        },
+        "m-aa3": {
+          desc: "[M(AA)₃] (Point Group D₃): Three bidentate chelating ligands form a three-bladed helical propeller. Contains one C₃ axis and three perpendicular C₂ axes, but zero improper axes (no σ, no i). Chiral (Δ and Λ enantiomers).",
+          ligands: [
+            { pos: VERTICES.px, color: 0x10b981 },
+            { pos: VERTICES.py, color: 0x10b981 },
+            { pos: VERTICES.nx, color: 0x059669 },
+            { pos: VERTICES.pz, color: 0x059669 },
+            { pos: VERTICES.ny, color: 0x047857 },
+            { pos: VERTICES.nz, color: 0x047857 }
+          ],
+          chelates: [[0, 1], [2, 3], [4, 5]]
+        },
+        "cis-ma2b4": {
+          desc: "cis-[Ma₂b₄] (Point Group C₂v): Two 'a' ligands (red) are positioned at 90°. Contains two mirror planes (σv) that bisect the molecule, allowing the mirror reflection to superimpose onto the original structure. Achiral.",
+          ligands: [
+            { pos: VERTICES.pz, color: 0xef4444 },
+            { pos: VERTICES.px, color: 0xef4444 },
+            { pos: VERTICES.nz, color: 0x3b82f6 },
+            { pos: VERTICES.nx, color: 0x3b82f6 },
+            { pos: VERTICES.py, color: 0x3b82f6 },
+            { pos: VERTICES.ny, color: 0x3b82f6 }
+          ],
+          chelates: []
+        },
+        "trans-ma2b4": {
+          desc: "trans-[Ma₂b₄] (Point Group D₄h): Two 'a' ligands (red) sit at 180° across the metal center. Possesses an inversion center (i) and multiple mirror planes. Achiral.",
+          ligands: [
+            { pos: VERTICES.pz, color: 0xef4444 },
+            { pos: VERTICES.nz, color: 0xef4444 },
+            { pos: VERTICES.px, color: 0x3b82f6 },
+            { pos: VERTICES.nx, color: 0x3b82f6 },
+            { pos: VERTICES.py, color: 0x3b82f6 },
+            { pos: VERTICES.ny, color: 0x3b82f6 }
+          ],
+          chelates: []
+        },
+        "fac-ma3b3": {
+          desc: "fac-[Ma₃b₃] (Point Group C₃v): Three identical 'a' ligands (red) occupy one triangular face of the octahedron (all a-M-a angles = 90°). Contains three vertical mirror planes (σv). Achiral.",
+          ligands: [
+            { pos: VERTICES.px, color: 0xef4444 },
+            { pos: VERTICES.py, color: 0xef4444 },
+            { pos: VERTICES.pz, color: 0xef4444 },
+            { pos: VERTICES.nx, color: 0x3b82f6 },
+            { pos: VERTICES.ny, color: 0x3b82f6 },
+            { pos: VERTICES.nz, color: 0x3b82f6 }
+          ],
+          chelates: []
+        },
+        "mer-ma3b3": {
+          desc: "mer-[Ma₃b₃] (Point Group C₂v): Three identical 'a' ligands (red) lie in a meridian plane passing through the metal center (two 90° angles and one 180° angle). Contains mirror planes. Achiral.",
+          ligands: [
+            { pos: VERTICES.px, color: 0xef4444 },
+            { pos: VERTICES.nx, color: 0xef4444 },
+            { pos: VERTICES.py, color: 0xef4444 },
+            { pos: VERTICES.ny, color: 0x3b82f6 },
+            { pos: VERTICES.pz, color: 0x3b82f6 },
+            { pos: VERTICES.nz, color: 0x3b82f6 }
+          ],
+          chelates: []
+        }
+      };
+
+      let isRotationSynchronized = true;
+      const viewports = {};
+
+      function setupViewport(domId, isMirror = false) {
+        const container = document.getElementById(domId);
+        const width = container.clientWidth || 500;
+        const height = container.clientHeight || 480;
+
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0x0e1422);
+
+        const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 100);
+        camera.position.set(5.5, 4.5, 7.5);
+
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(width, height);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        container.appendChild(renderer.domElement);
+
+        const controls = new THREE.OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true;
+        controls.dampingFactor = 0.06;
+
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.75);
+        scene.add(ambientLight);
+        const dirLight = new THREE.DirectionalLight(0xffffff, 0.65);
+        dirLight.position.set(10, 15, 10);
+        scene.add(dirLight);
+
+        const modelGroup = new THREE.Group();
+        scene.add(modelGroup);
+
+        return { container, scene, camera, renderer, controls, modelGroup, isMirror };
+      }
+
+      viewports.orig = setupViewport("vp-original", false);
+      viewports.mirror = setupViewport("vp-mirror", true);
+
+      function renderComplex(group, data, isMirror = false) {
+        while (group.children.length > 0) {
+          group.remove(group.children[0]);
+        }
+
+        // Central Metal Core
+        const metalGeo = new THREE.SphereGeometry(0.7, 32, 32);
+        const metalMat = new THREE.MeshStandardMaterial({ color: 0x94a3b8, roughness: 0.3, metalness: 0.5 });
+        group.add(new THREE.Mesh(metalGeo, metalMat));
+
+        const ligandVectors = [];
+        data.ligands.forEach((lig) => {
+          const x = isMirror ? -lig.pos[0] : lig.pos[0];
+          const posVec = new THREE.Vector3(x, lig.pos[1], lig.pos[2]);
+
+          // Coordinated Ligand Sphere
+          const ligGeo = new THREE.SphereGeometry(0.42, 24, 24);
+          const ligMat = new THREE.MeshStandardMaterial({ color: lig.color, roughness: 0.35 });
+          const ligMesh = new THREE.Mesh(ligGeo, ligMat);
+          ligMesh.position.copy(posVec);
+          group.add(ligMesh);
+          ligandVectors.push(posVec);
+
+          // Coordinate Bond Cylinder
+          const bondGeo = new THREE.CylinderGeometry(0.08, 0.08, posVec.length(), 16);
+          const bondMat = new THREE.MeshStandardMaterial({ color: 0x64748b, roughness: 0.5 });
+          const bondMesh = new THREE.Mesh(bondGeo, bondMat);
+          bondMesh.position.copy(posVec.clone().multiplyScalar(0.5));
+          bondMesh.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), posVec.clone().normalize());
+          group.add(bondMesh);
+        });
+
+        // Chelate Bridges
+        data.chelates.forEach(pair => {
+          const p1 = ligandVectors[pair[0]];
+          const p2 = ligandVectors[pair[1]];
+          const curve = new THREE.QuadraticBezierCurve3(
+            p1,
+            p1.clone().add(p2).multiplyScalar(0.68),
+            p2
+          );
+          const tubeGeo = new THREE.TubeGeometry(curve, 24, 0.09, 8, false);
+          const tubeMat = new THREE.MeshStandardMaterial({ color: 0x10b981, roughness: 0.35 });
+          group.add(new THREE.Mesh(tubeGeo, tubeMat));
+        });
+      }
+
+      function switchPreset(key) {
+        const data = COMPLEX_PRESETS[key];
+        renderComplex(viewports.orig.modelGroup, data, false);
+        renderComplex(viewports.mirror.modelGroup, data, true);
+        document.getElementById("analysis-text").innerText = data.desc;
+      }
+
+      document.getElementById("preset-select").addEventListener("change", (e) => switchPreset(e.target.value));
+
+      const btnSync = document.getElementById("btn-sync");
+      btnSync.addEventListener("click", () => {
+        isRotationSynchronized = !isRotationSynchronized;
+        btnSync.innerText = `Synchronized Rotation: ${isRotationSynchronized ? 'ON' : 'OFF'}`;
+        btnSync.classList.toggle("btn-active", isRotationSynchronized);
+      });
+
+      document.getElementById("btn-reset").addEventListener("click", () => {
+        [viewports.orig, viewports.mirror].forEach(v => {
+          v.camera.position.set(5.5, 4.5, 7.5);
+          v.controls.reset();
+        });
+      });
+
+      let isSyncing = false;
+      viewports.orig.controls.addEventListener("change", () => {
+        if (isRotationSynchronized && !isSyncing) {
+          isSyncing = true;
+          viewports.mirror.camera.position.copy(viewports.orig.camera.position);
+          viewports.mirror.camera.rotation.copy(viewports.orig.camera.rotation);
+          viewports.mirror.controls.update();
+          isSyncing = false;
+        }
+      });
+
+      viewports.mirror.controls.addEventListener("change", () => {
+        if (isRotationSynchronized && !isSyncing) {
+          isSyncing = true;
+          viewports.orig.camera.position.copy(viewports.mirror.camera.position);
+          viewports.orig.camera.rotation.copy(viewports.mirror.camera.rotation);
+          viewports.orig.controls.update();
+          isSyncing = false;
+        }
+      });
+
+      function handleResize() {
+        [viewports.orig, viewports.mirror].forEach(v => {
+          const w = v.container.clientWidth;
+          const h = v.container.clientHeight;
+          if (w > 0 && h > 0) {
+            v.camera.aspect = w / h;
+            v.camera.updateProjectionMatrix();
+            v.renderer.setSize(w, h);
+          }
+        });
+      }
+
+      window.addEventListener("resize", handleResize);
+
+      function animate() {
+        requestAnimationFrame(animate);
+        viewports.orig.controls.update();
+        viewports.mirror.controls.update();
+        viewports.orig.renderer.render(viewports.orig.scene, viewports.orig.camera);
+        viewports.mirror.renderer.render(viewports.mirror.scene, viewports.mirror.camera);
+      }
+
+      switchPreset("cis-m-aa2-b2");
+      handleResize();
+      animate();
+    });
+  </script>
+</body>
+</html>
